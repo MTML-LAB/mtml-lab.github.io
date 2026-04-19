@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Умножай и властвуй</title>
+
+  <!-- MathJax for LaTeX -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cell-size: clamp(26px, 2.2vw, 34px);
+      --control-size: clamp(32px, 2.4vw, 38px);
+    }
+
+    html {
+      font-size: clamp(13px, 0.8vw, 19px);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: #111;
+    }
+
+    /* A1 Landscape Ratio (approx 841 x 594 mm => 1.414 ratio) */
+    .poster {
+      position: relative;
+      width: 100%;
+      max-width: none;
+      min-height: 100vh;
+      height: auto;
+      margin: 0;
+      padding: clamp(14px, 2.8vw, 40px);
+      box-sizing: border-box;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(12px, 1.8vw, 20px);
+    }
+
+    header {
+      text-align: center;
+    }
+
+    .corner-logo {
+      position: absolute;
+      top: clamp(14px, 2.8vw, 40px);
+      width: clamp(130px, 22vw, 320px);
+      height: auto;
+      border-radius: 0;
+    }
+
+    .logo-left {
+      left: clamp(14px, 2.8vw, 40px);
+    }
+
+    .logo-right {
+      right: clamp(14px, 2.8vw, 40px);
+      width: clamp(165px, 26vw, 390px);
+    }
+
+    header h1 {
+      font-size: clamp(1.45rem, 3.4vw, 3.2rem);
+      line-height: 1.08;
+      margin: 0;
+    }
+
+    .header-subtitle {
+      font-size: clamp(1rem, 2.1vw, 2rem);
+      line-height: 1.05;
+    }
+
+    header p {
+      font-size: clamp(0.88rem, 1.55vw, 1.28rem);
+      opacity: 0.8;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(12px, 1.8vw, 20px);
+    }
+
+    .column {
+      background: #f5f5f5;
+      padding: clamp(12px, 1.7vw, 20px);
+      border-radius: 12px;
+      overflow: auto;
+    }
+
+    h2 {
+      border-bottom: 2px solid #ddd;
+      font-size: clamp(1.08rem, 1.7vw, 1.62rem);
+      padding-bottom: 5px;
+    }
+
+    .accent-umnozhenie {
+      color: #2f6fc7;
+    }
+
+    .accent-razlozhenie {
+      color: #d87a2f;
+    }
+
+    p {
+      font-size: clamp(0.9rem, 1.3vw, 1.08rem);
+      line-height: 1.45;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    li {
+      margin-bottom: 0.45rem;
+      line-height: 1.4;
+    }
+
+    .formula {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: clamp(1rem, 1.45vw, 1.18rem);
+      padding: clamp(8px, 1.1vw, 12px);
+      text-align: center;
+    }
+
+    .formula-plain {
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .decomposition-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 14px;
+    }
+
+    .decomposition-card p {
+      margin: 0;
+    }
+
+    .decomposition-visual {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin-top: 4px;
+      padding: 8px;
+    }
+
+    .decomposition-visual img {
+      border-radius: 6px;
+      display: block;
+      width: 100%;
+    }
+
+    .matrix-demo {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      display: grid;
+      gap: clamp(8px, 1.2vw, 12px);
+      margin: clamp(10px, 1.6vw, 16px) 0;
+      padding: clamp(10px, 1.3vw, 14px);
+    }
+
+    .matrix-demo-equation {
+      display: grid;
+      grid-template-columns: auto 18px auto 18px auto;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .matrix {
+      display: grid;
+      gap: 4px;
+      position: relative;
+    }
+
+    .matrix-2x3 {
+      grid-template-columns: repeat(3, var(--cell-size));
+    }
+
+    .matrix-3x2 {
+      grid-template-columns: repeat(2, var(--cell-size));
+    }
+
+    .matrix-2x2 {
+      grid-template-columns: repeat(2, var(--cell-size));
+    }
+
+    .matrix-3x3 {
+      grid-template-columns: repeat(3, var(--cell-size));
+    }
+
+    .matrix-2x4 {
+      grid-template-columns: repeat(4, var(--cell-size));
+    }
+
+    .matrix-1x4 {
+      grid-template-columns: repeat(4, var(--cell-size));
+    }
+
+    .matrix-demo-single {
+      display: flex;
+      justify-content: center;
+    }
+
+    .cell {
+      align-items: center;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      display: flex;
+      font-size: clamp(0.82rem, 1.05vw, 1rem);
+      font-weight: 700;
+      height: var(--cell-size);
+      justify-content: center;
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    }
+
+    .cell.active-row {
+      background: #ffe4cc;
+      border-color: #d87a2f;
+    }
+
+    .cell.active-column {
+      background: #e8f0ff;
+      border-color: #2f6fc7;
+    }
+
+    .cell.active-output {
+      background: #111;
+      border-color: #111;
+      color: #fff;
+      transform: scale(1.08);
+    }
+
+    .operator {
+      font-size: clamp(1.12rem, 2.1vw, 1.52rem);
+      font-weight: 700;
+    }
+
+    .dot-product {
+      background: #f5f5f5;
+      border-radius: 8px;
+      color: #333;
+      font-size: clamp(0.84rem, 1.05vw, 1rem);
+      min-height: 2.2rem;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .dot-product strong {
+      color: #111;
+    }
+
+    .matrix-demo-footer {
+      display: grid;
+      grid-template-columns: var(--control-size) 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .image-slider {
+      display: grid;
+      gap: 14px;
+    }
+
+    .slider-image-frame {
+      aspect-ratio: 1;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slider-image {
+      height: 100%;
+      inset: 0;
+      object-fit: contain;
+      opacity: 0;
+      position: absolute;
+      transition: opacity 0.55s ease-in-out, transform 0.55s ease-in-out;
+      transform: scale(1.015);
+      width: 100%;
+    }
+
+    .slider-image.is-visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .slider-control {
+      display: grid;
+      gap: 8px;
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: var(--control-size) 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .play-button {
+      width: var(--control-size);
+      height: var(--control-size);
+      border: 1px solid #111;
+      border-radius: 50%;
+      background: #fff;
+      color: #111;
+      font-size: clamp(0.92rem, 1.25vw, 1.06rem);
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .play-button:hover {
+      background: #111;
+      color: #fff;
+    }
+
+    .slider-control input[type="range"] {
+      width: 100%;
+      margin: 0;
+      accent-color: #111;
+    }
+
+    .slider-ticks {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 4px;
+      width: calc(100% - (var(--control-size) + 10px));
+      margin-left: calc(var(--control-size) + 10px);
+      font-size: clamp(0.66rem, 0.9vw, 0.78rem);
+      line-height: 1.2;
+      color: #333;
+      text-align: center;
+    }
+
+    .slider-ticks span:first-child {
+      text-align: left;
+    }
+
+    .slider-ticks span:last-child {
+      text-align: right;
+    }
+
+    .slider-ticks-dog {
+      font-size: clamp(0.78rem, 1.05vw, 0.96rem);
+      font-weight: 600;
+    }
+
+    .kiss-svd {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      display: grid;
+      gap: 10px;
+      margin: 10px 0 16px;
+      padding: 10px;
+    }
+
+    .kiss-svd .slider-image-frame {
+      aspect-ratio: 4 / 3;
+      min-height: clamp(160px, 26vw, 220px);
+    }
+
+    .kiss-svd .slider-ticks {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    .kiss-svd-label {
+      color: #333;
+      font-size: clamp(0.88rem, 1vw, 1rem);
+      margin: 0;
+      text-align: center;
+    }
+
+    .manifold-geometry {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      height: clamp(220px, 30vw, 340px);
+      margin-top: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .manifold-geometry-path {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .manifold-tikz {
+      height: 100%;
+      inset: 0;
+      position: absolute;
+      width: 100%;
+      border: 0;
+      z-index: 1;
+      pointer-events: none;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .manifold-surface {
+      height: 100%;
+      inset: 0;
+      position: absolute;
+      width: 100%;
+      z-index: 2;
+    }
+
+    .manifold-sample {
+      align-items: center;
+      cursor: pointer;
+      display: grid;
+      gap: 4px;
+      justify-items: center;
+      left: calc(var(--x) * 1%);
+      position: absolute;
+      top: calc(var(--y) * 1%);
+      transform: translate(-50%, -100%);
+      transition: transform 0.25s ease;
+      z-index: 2;
+    }
+
+    .manifold-sample img {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      height: clamp(30px, 4vw, 42px);
+      object-fit: contain;
+      padding: 2px;
+      width: clamp(30px, 4vw, 42px);
+    }
+
+    .manifold-point {
+      background: #fff;
+      border: 2px solid #111;
+      border-radius: 50%;
+      height: clamp(8px, 1.1vw, 10px);
+      width: clamp(8px, 1.1vw, 10px);
+    }
+
+    .manifold-sample.is-active {
+      transform: translate(-50%, -100%) scale(1.12);
+    }
+
+    .manifold-sample.is-active img {
+      border-color: #111;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .manifold-sample.is-active .manifold-point {
+      background: #111;
+    }
+
+    .manifold-examples {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .manifold-example {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .manifold-example svg {
+      width: 100%;
+      height: 120px;
+      display: block;
+      margin: 0 auto 6px;
+    }
+
+    .manifold-example-label {
+      font-size: clamp(0.82rem, 0.95vw, 0.95rem);
+      color: #333;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    pre {
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    footer {
+      text-align: center;
+      font-size: clamp(0.78rem, 1.05vw, 0.98rem);
+      opacity: 0.7;
+    }
+
+    @media (max-width: 1180px) {
+      .content {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 880px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .poster {
+        min-height: auto;
+      }
+
+      header {
+        padding-top: clamp(34px, 6vw, 58px);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .matrix-demo-equation {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+
+      .slider-ticks {
+        gap: 2px;
+      }
+    }
+
+    /* Simple animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 1s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="poster">
+    <img class="corner-logo logo-left" src="../mtml_logo/logo.png" alt="MTML logo">
+    <img class="corner-logo logo-right" src="figures/hse_logo.png" alt="HSE logo">
+
+    <!-- HEADER -->
+    <header class="fade-in">
+      <h1>Умножай и властвуй:</h1>
+      <h1 class="header-subtitle">от сжатия изображений до объединения стилей</h1>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+
+      <!-- COLUMN 1 -->
+      <div class="column fade-in">
+        <h2>Матрица</h2>
+        <p>
+          Матрица — это таблица чисел с фиксированным числом строк и столбцов.
+        </p>
+        <div class="matrix-demo" aria-label="Пример матрицы">
+          <p class="formula formula-plain">\(C = \begin{pmatrix} 3 & 1 & 4 & 1 \\ 5 & 9 & 2 & 6 \end{pmatrix}\)</p>
+          <div class="dot-product">Матрица \(C\) размера \(2 \times 4\)</div>
+        </div>
+
+        <!-- <h2>Матричное <span class="accent-umnozhenie">умножение</span></h2> -->
+        <h2>Матричное умножение</h2>
+        <p>
+          Умножение матриц — важная операция линейной алгебры.
+        </p>
+        <div class="matrix-demo" aria-label="Анимация умножения матриц">
+          <button id="matrixPlay" class="play-button" type="button"
+            aria-label="Pause matrix multiplication animation">Ⅱ</button>
+          <div class="matrix-demo-equation">
+            <div class="matrix matrix-3x2" id="matrixA">
+              <span class="cell" data-row="0" data-col="0">1</span>
+              <span class="cell" data-row="0" data-col="1">0</span>
+              <span class="cell" data-row="1" data-col="0">1</span>
+              <span class="cell" data-row="1" data-col="1">3</span>
+              <span class="cell" data-row="2" data-col="0">1</span>
+              <span class="cell" data-row="2" data-col="1">6</span>
+            </div>
+            <span class="operator">×</span>
+            <div class="matrix matrix-2x3" id="matrixB">
+              <span class="cell" data-row="0" data-col="0">1</span>
+              <span class="cell" data-row="0" data-col="1">2</span>
+              <span class="cell" data-row="0" data-col="2">3</span>
+              <span class="cell" data-row="1" data-col="0">1</span>
+              <span class="cell" data-row="1" data-col="1">1</span>
+              <span class="cell" data-row="1" data-col="2">1</span>
+            </div>
+            <span class="operator">=</span>
+            <div class="matrix matrix-3x3" id="matrixC">
+              <span class="cell" data-row="0" data-col="0">1</span>
+              <span class="cell" data-row="0" data-col="1">2</span>
+              <span class="cell" data-row="0" data-col="2">3</span>
+              <span class="cell" data-row="1" data-col="0">4</span>
+              <span class="cell" data-row="1" data-col="1">5</span>
+              <span class="cell" data-row="1" data-col="2">6</span>
+              <span class="cell" data-row="2" data-col="0">7</span>
+              <span class="cell" data-row="2" data-col="1">8</span>
+              <span class="cell" data-row="2" data-col="2">9</span>
+            </div>
+          </div>
+          <div class="dot-product" id="dotProductText">
+            Берем строку первой матрицы и столбец второй.
+          </div>
+          <div class="matrix-demo-footer">
+          </div>
+        </div>
+        <p>Где:</p>
+        <ul style="font-size: 20px">
+          <li>\(A\) имеет размер \(m \times n\)</li>
+          <li>\(B\) имеет размер \(n \times r\)</li>
+          <li>\(C\) имеет размер \(m \times r\)</li>
+        </ul>
+        <p class="formula">$$C = AB, \qquad C_{ij} = \sum_{k=1}^{n} A_{ik} B_{kj}$$</p>
+        <strong>Задачи:</strong>
+        <p class="formula">$$\begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} =
+          ? \qquad \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} = ?$$</p>
+
+
+      </div>
+
+      <!-- COLUMN 2 -->
+      <div class="column fade-in">
+        <!-- <h2>Матричное <span class="accent-razlozhenie">разложение</span></h2> -->
+        <h2>Матричное разложение</h2>
+        <p>Теперь, наоборот, будем искать компактное разложение заранее заданной матрицы \(C\):</p>
+        <p class="formula">\(A\colon m \times r, \quad B\colon r \times n, \quad AB = C\),</p>
+        <p>
+          где \(r \ll m, n\) — число, которое мы выбираем так, чтобы уменьшить число параметров и ускорить вычисления.
+        </p>
+        <p>
+          Минимально возможное \(r\) — это <strong>ранг</strong> матрицы.
+          Если взять меньше, часть данных потеряется, зато уменьшится число параметров.
+        </p>
+        <div class="decomposition-visual">
+          <img src="figures/matrix_thick_thin.svg" alt="Слева произведение U и V, справа матрица A">
+        </div>
+
+        <!-- <h2>SVD-сжатие изображений</h2> -->
+        <p>
+          Изменяя число \( r \), можно управлять степенью сжатия изображения: при увеличении \( r \) картинка постепенно
+          восстанавливает мелкие детали:
+        </p>
+        <div class="kiss-svd" aria-label="SVD-сжатие изображения kiss.jpg">
+          <div class="slider-image-frame">
+            <img id="kissSvdImageA" class="slider-image is-visible" src="figures/kiss_svd/k_2.jpg"
+              alt="SVD compression of kiss image at rank 2">
+            <img id="kissSvdImageB" class="slider-image" src="figures/kiss_svd/k_2.jpg" alt="" aria-hidden="true">
+          </div>
+          <div class="slider-control">
+            <div class="slider-row">
+              <button id="kissSvdPlay" class="play-button" type="button"
+                aria-label="Play SVD compression slider">▶</button>
+              <input id="kissSvdSlider" type="range" min="0" max="5" step="1" value="0"
+                aria-label="SVD compression rank slider">
+            </div>
+            <div class="slider-ticks" aria-hidden="true">
+              <span>2</span>
+              <span>10</span>
+              <span>30</span>
+              <span>60</span>
+              <span>120</span>
+              <span>full</span>
+            </div>
+          </div>
+          <p class="kiss-svd-label" id="kissSvdLabel">r</p>
+        </div>
+      </div>
+
+      <!-- COLUMN 3 -->
+      <div class="column fade-in">
+        <h2>Матрицы в нейросетях</h2>
+        <p>
+          <strong>Нейросети</strong> — сложная функция от набора матриц (гигабайты параметров).
+          Их обучение — сложный и долгий процесс.
+        </p>
+        <p>
+          <strong>Дообучение нейросетей</strong>
+          — вместо полного изменения параметров нейросети - добавки (адаптеры) с малым числом параметров. Мы уже
+          знакомы с этой структурой:
+        </p>
+        <p class="formula">$$W' = W + AB$$</p>
+        <p>
+          Здесь \(W\) — уже обученные параметры модели, а \(A\) и \(B\) — небольшие
+          матрицы, которые донастраиваются под новую задачу. Это экономит память,
+          время обучения и вычислительные ресурсы.
+        </p>
+        <h2>Геометрия произведения матриц</h2>
+        <p>
+          Для более эффективного дообучения моделей можно использовать геометрические подходы.
+          Множество всех матриц с фиксированным рангом \(r\) образуют <strong> гладкое многообразие</strong>,
+          которое можно использовать при дообучении.
+        </p>
+
+
+        <div class="manifold-geometry" aria-label="Схема многообразия адаптеров">
+          <img class="manifold-tikz" src="figures/manifold_tikz/rieman_compile_short.png"
+            alt="TikZ diagram of the manifold">
+        </div>
+
+        <p><strong>Примеры многообразий:</strong></p>
+        <div class="manifold-examples" aria-label="Примеры: сфера и тор">
+          <div class="manifold-example">
+            <svg viewBox="0 0 120 90" role="img" aria-label="Сфера">
+              <defs>
+                <radialGradient id="sphereGrad" cx="35%" cy="30%" r="65%">
+                  <stop offset="0" stop-color="#ffffff" />
+                  <stop offset="1" stop-color="#7aa6e8" />
+                </radialGradient>
+              </defs>
+              <circle cx="60" cy="45" r="30" fill="url(#sphereGrad)" stroke="#2f6fc7" stroke-width="1.5" />
+              <ellipse cx="60" cy="45" rx="26" ry="10" fill="none" stroke="#2f6fc7" stroke-opacity="0.35" />
+              <ellipse cx="60" cy="45" rx="12" ry="30" fill="none" stroke="#2f6fc7" stroke-opacity="0.35" />
+            </svg>
+            <p class="manifold-example-label">Сфера</p>
+          </div>
+          <div class="manifold-example">
+            <svg viewBox="0 0 120 90" role="img" aria-label="Тор">
+              <defs>
+                <radialGradient id="torusGrad" cx="42%" cy="34%" r="68%">
+                  <stop offset="0" stop-color="#ffe8cf" />
+                  <stop offset="1" stop-color="#d87a2f" />
+                </radialGradient>
+              </defs>
+              <ellipse cx="60" cy="45" rx="40" ry="28" fill="url(#torusGrad)" stroke="#b06025" stroke-width="1.5" />
+              <ellipse cx="60" cy="45" rx="13" ry="8" fill="#ffffff" stroke="#b06025" stroke-width="1.2" />
+              <ellipse cx="60" cy="54" rx="30" ry="14" fill="none" stroke="#b06025" stroke-opacity="0.35" />
+            </svg>
+            <p class="manifold-example-label">Тор</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUMN 4 -->
+      <div class="column fade-in">
+        <h2>Dog — van Gogh</h2>
+        <!-- <p>
+          Если обучить несколько таких адаптеров, как было показано, они образуют структуру, по которой
+          можно плавно перемещаться. Например, так можно постепенно менять стиль изображения.
+        </p> -->
+        <p>
+          Имея адаптеры нейросети для генерации конкретной собачки и адаптеры другой сети для воспроизведения стиля Ван
+          Гога, мы можем получить третий адаптер, который умеет и то и другое!
+        </p>
+        <p>
+          Благодаря структуре многообразия мы можем проложить кратчайший путь между двумя адаптерами, балансируя между
+          стилем и собачкой.
+        </p>
+        <!-- <p>
+          Слайдер справа показывает такую интерполяцию: изображение постепенно
+          меняется от исходной концепции к заданному стилю.
+        </p> -->
+        <div class="image-slider">
+          <div class="slider-image-frame">
+            <img id="manifoldDogImageA" class="slider-image is-visible" src="figures/manifold_dog/concept.png"
+              alt="Manifold dog at concept tick">
+            <img id="manifoldDogImageB" class="slider-image" src="figures/manifold_dog/concept.png" alt=""
+              aria-hidden="true">
+          </div>
+          <div class="slider-control">
+            <div class="slider-row">
+              <button id="manifoldDogPlay" class="play-button" type="button"
+                aria-label="Play manifold dog slider">▶</button>
+              <input id="manifoldDogSlider" type="range" min="0" max="8" step="1" value="0"
+                aria-label="Manifold dog interpolation">
+            </div>
+            <div class="slider-ticks slider-ticks-dog" aria-hidden="true">
+              <span>dog</span>
+              <span>0</span>
+              <span>0.2</span>
+              <span>0.4</span>
+              <span>0.5</span>
+              <span>0.6</span>
+              <span>0.8</span>
+              <span>1.0</span>
+              <span>van Gogh</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="manifold-geometry manifold-geometry-path" aria-label="Путь изображений на многообразии адаптеров">
+          <svg class="manifold-surface" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M10 72 C23 55 34 45 47 39 C60 34 73 48 91 70" fill="none" stroke="#111" stroke-linecap="round"
+              stroke-width="1.4" />
+          </svg>
+          <div class="manifold-sample is-active" data-index="0" style="--x: 10; --y: 72;">
+            <img src="figures/manifold_dog/concept.png" alt="Dog concept">
+            <span class="manifold-point"></span>
+          </div>
+          <div class="manifold-sample" data-index="1" style="--x: 20; --y: 60;">
+            <img src="figures/manifold_dog/0.png" alt="Dog interpolation 0">
+            <span class="manifold-point"></span>
+          </div>
+          <div class="manifold-sample" data-index="2" style="--x: 31; --y: 51;">
+            <img src="figures/manifold_dog/0.2.png" alt="Dog interpolation 0.2">
+            <span class="manifold-point"></span>
+          </div>
+          <div class="manifold-sample" data-index="3" style="--x: 42; --y: 43;">
+            <img src="figures/manifold_dog/0.4.png" alt="Dog interpolation 0.4">
+            <span class="manifold-point"></span>
+          </div>
+          <div class="manifold-sample" data-index="4" style="--x: 53; --y: 38;">
+            <img src="figures/manifold_dog/0.5.png" alt="Dog interpolation 0.5">
+            <span class="manifold-point"></span>
+          </div>
+          <div class="manifold-sample" data-index="5" style="--x: 63; --y: 41;">
+            <img src="figures/manifold_dog/0.6.png" alt="Dog interpolation 0.6">
+            <span class="manifold-point"></span>
+          </div>
+          <div class="manifold-sample" data-index="6" style="--x: 73; --y: 50;">
+            <img src="figures/manifold_dog/0.8.png" alt="Dog interpolation 0.8">
+            <span class="manifold-point"></span>
+          </div>
+          <div class="manifold-sample" data-index="7" style="--x: 83; --y: 60;">
+            <img src="figures/manifold_dog/1.0.png" alt="Dog interpolation 1.0">
+            <span class="manifold-point"></span>
+          </div>
+          <div class="manifold-sample" data-index="8" style="--x: 91; --y: 72;">
+            <img src="figures/manifold_dog/style.png" alt="Dog style">
+            <span class="manifold-point"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="fade-in">
+      <p>mail: mtml.lab@outlook.com</p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Fade-in on load
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.fade-in').forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), i * 200);
+      });
+    });
+
+    const matrixSteps = [
+      {
+        row: 0,
+        column: 0,
+        text: '<strong>1</strong> = 1·1 + 0·1'
+      },
+      {
+        row: 0,
+        column: 1,
+        text: '<strong>2</strong> = 1·2 + 0·1'
+      },
+      {
+        row: 0,
+        column: 2,
+        text: '<strong>3</strong> = 1·3 + 0·1'
+      },
+      {
+        row: 1,
+        column: 0,
+        text: '<strong>4</strong> = 1·1 + 3·1'
+      },
+      {
+        row: 1,
+        column: 1,
+        text: '<strong>5</strong> = 1·2 + 3·1'
+      },
+      {
+        row: 1,
+        column: 2,
+        text: '<strong>6</strong> = 1·3 + 3·1'
+      },
+      {
+        row: 2,
+        column: 0,
+        text: '<strong>7</strong> = 1·1 + 6·1'
+      },
+      {
+        row: 2,
+        column: 1,
+        text: '<strong>8</strong> = 1·2 + 6·1'
+      },
+      {
+        row: 2,
+        column: 2,
+        text: '<strong>9</strong> = 1·3 + 6·1'
+      }
+    ];
+
+    const matrixACells = document.querySelectorAll('#matrixA .cell');
+    const matrixBCells = document.querySelectorAll('#matrixB .cell');
+    const matrixCCells = document.querySelectorAll('#matrixC .cell');
+    const dotProductText = document.getElementById('dotProductText');
+    const matrixPlay = document.getElementById('matrixPlay');
+    let matrixStepIndex = 0;
+    let matrixInterval = null;
+
+    const setMatrixStep = () => {
+      const step = matrixSteps[matrixStepIndex];
+
+      matrixACells.forEach((cell) => {
+        cell.classList.toggle('active-row', Number(cell.dataset.row) === step.row);
+      });
+
+      matrixBCells.forEach((cell) => {
+        cell.classList.toggle('active-column', Number(cell.dataset.col) === step.column);
+      });
+
+      matrixCCells.forEach((cell) => {
+        const isOutput = Number(cell.dataset.row) === step.row && Number(cell.dataset.col) === step.column;
+        cell.classList.toggle('active-output', isOutput);
+      });
+
+      dotProductText.innerHTML = step.text;
+      matrixStepIndex = (matrixStepIndex + 1) % matrixSteps.length;
+    };
+
+    setMatrixStep();
+    matrixInterval = setInterval(setMatrixStep, 1400);
+
+    matrixPlay.addEventListener('click', () => {
+      if (matrixInterval) {
+        clearInterval(matrixInterval);
+        matrixInterval = null;
+        matrixPlay.textContent = '▶';
+        matrixPlay.setAttribute('aria-label', 'Play matrix multiplication animation');
+        return;
+      }
+
+      setMatrixStep();
+      matrixInterval = setInterval(setMatrixStep, 1400);
+      matrixPlay.textContent = 'Ⅱ';
+      matrixPlay.setAttribute('aria-label', 'Pause matrix multiplication animation');
+    });
+
+    const manifoldDogStates = [
+      { label: 'concept', src: 'figures/manifold_dog/concept.png' },
+      { label: '0', src: 'figures/manifold_dog/0.png' },
+      { label: '0.2', src: 'figures/manifold_dog/0.2.png' },
+      { label: '0.4', src: 'figures/manifold_dog/0.4.png' },
+      { label: '0.5', src: 'figures/manifold_dog/0.5.png' },
+      { label: '0.6', src: 'figures/manifold_dog/0.6.png' },
+      { label: '0.8', src: 'figures/manifold_dog/0.8.png' },
+      { label: '1.0', src: 'figures/manifold_dog/1.0.png' },
+      { label: 'style', src: 'figures/manifold_dog/style.png' }
+    ];
+
+    const manifoldDogSlider = document.getElementById('manifoldDogSlider');
+    const manifoldDogImages = [
+      document.getElementById('manifoldDogImageA'),
+      document.getElementById('manifoldDogImageB')
+    ];
+    const manifoldDogPlay = document.getElementById('manifoldDogPlay');
+    const manifoldSamples = document.querySelectorAll('.manifold-sample');
+    let manifoldDogInterval = null;
+    let manifoldDogDirection = 1;
+    let visibleDogImage = 0;
+    let currentDogIndex = 0;
+
+    manifoldDogStates.forEach((state) => {
+      const image = new Image();
+      image.src = state.src;
+    });
+
+    const setManifoldDogState = (index) => {
+      if (index === currentDogIndex) {
+        return;
+      }
+
+      const state = manifoldDogStates[index];
+      const nextDogImage = 1 - visibleDogImage;
+
+      manifoldDogSlider.value = index;
+      manifoldSamples.forEach((sample) => {
+        sample.classList.toggle('is-active', Number(sample.dataset.index) === index);
+      });
+      manifoldDogImages[nextDogImage].src = state.src;
+      manifoldDogImages[nextDogImage].alt = `Manifold dog at ${state.label} tick`;
+      manifoldDogImages[nextDogImage].removeAttribute('aria-hidden');
+      manifoldDogImages[visibleDogImage].setAttribute('aria-hidden', 'true');
+      manifoldDogImages[nextDogImage].classList.add('is-visible');
+      manifoldDogImages[visibleDogImage].classList.remove('is-visible');
+      visibleDogImage = nextDogImage;
+      currentDogIndex = index;
+    };
+
+    manifoldDogSlider.addEventListener('input', () => {
+      setManifoldDogState(Number(manifoldDogSlider.value));
+    });
+
+    manifoldSamples.forEach((sample) => {
+      sample.addEventListener('click', () => {
+        setManifoldDogState(Number(sample.dataset.index));
+      });
+    });
+
+    manifoldDogPlay.addEventListener('click', () => {
+      if (manifoldDogInterval) {
+        clearInterval(manifoldDogInterval);
+        manifoldDogInterval = null;
+        manifoldDogPlay.textContent = '▶';
+        manifoldDogPlay.setAttribute('aria-label', 'Play manifold dog slider');
+        return;
+      }
+
+      manifoldDogPlay.textContent = 'Ⅱ';
+      manifoldDogPlay.setAttribute('aria-label', 'Pause manifold dog slider');
+      manifoldDogInterval = setInterval(() => {
+        let nextIndex = Number(manifoldDogSlider.value) + manifoldDogDirection;
+
+        if (nextIndex >= manifoldDogStates.length - 1 || nextIndex <= 0) {
+          manifoldDogDirection *= -1;
+        }
+
+        nextIndex = Math.max(0, Math.min(manifoldDogStates.length - 1, nextIndex));
+        setManifoldDogState(nextIndex);
+      }, 700);
+    });
+
+    const kissSvdStates = [
+      { label: '2', src: 'figures/kiss_svd/k_2.jpg' },
+      { label: '10', src: 'figures/kiss_svd/k_10.jpg' },
+      { label: '30', src: 'figures/kiss_svd/k_30.jpg' },
+      { label: '60', src: 'figures/kiss_svd/k_60.jpg' },
+      { label: '120', src: 'figures/kiss_svd/k_120.jpg' },
+      { label: 'original', src: 'figures/kiss_svd/k_full.jpg' }
+    ];
+
+    const kissSvdSlider = document.getElementById('kissSvdSlider');
+    const kissSvdImages = [
+      document.getElementById('kissSvdImageA'),
+      document.getElementById('kissSvdImageB')
+    ];
+    const kissSvdPlay = document.getElementById('kissSvdPlay');
+    let kissSvdInterval = null;
+    let kissSvdDirection = 1;
+    let visibleKissImage = 0;
+    let currentKissIndex = 0;
+
+    kissSvdStates.forEach((state) => {
+      const image = new Image();
+      image.src = state.src;
+    });
+
+    const setKissSvdState = (index) => {
+      if (index === currentKissIndex) {
+        return;
+      }
+
+      const state = kissSvdStates[index];
+      const nextKissImage = 1 - visibleKissImage;
+
+      kissSvdSlider.value = index;
+      kissSvdImages[nextKissImage].src = state.src;
+      kissSvdImages[nextKissImage].alt = `SVD compression of kiss image at ${state.label}`;
+      kissSvdImages[nextKissImage].removeAttribute('aria-hidden');
+      kissSvdImages[visibleKissImage].setAttribute('aria-hidden', 'true');
+      kissSvdImages[nextKissImage].classList.add('is-visible');
+      kissSvdImages[visibleKissImage].classList.remove('is-visible');
+      visibleKissImage = nextKissImage;
+      currentKissIndex = index;
+    };
+
+    kissSvdSlider.addEventListener('input', () => {
+      setKissSvdState(Number(kissSvdSlider.value));
+    });
+
+    kissSvdPlay.addEventListener('click', () => {
+      if (kissSvdInterval) {
+        clearInterval(kissSvdInterval);
+        kissSvdInterval = null;
+        kissSvdPlay.textContent = '▶';
+        kissSvdPlay.setAttribute('aria-label', 'Play SVD compression slider');
+        return;
+      }
+
+      kissSvdPlay.textContent = 'Ⅱ';
+      kissSvdPlay.setAttribute('aria-label', 'Pause SVD compression slider');
+      kissSvdInterval = setInterval(() => {
+        let nextIndex = Number(kissSvdSlider.value) + kissSvdDirection;
+
+        if (nextIndex >= kissSvdStates.length - 1 || nextIndex <= 0) {
+          kissSvdDirection *= -1;
+        }
+
+        nextIndex = Math.max(0, Math.min(kissSvdStates.length - 1, nextIndex));
+        setKissSvdState(nextIndex);
+      }, 850);
+    });
+  </script>
+
+</body>
+
+</html>

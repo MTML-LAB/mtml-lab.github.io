@@ -1,0 +1,72 @@
+\documentclass[tikz,border=5pt]{standalone}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\usepackage{xcolor}
+\usepackage{circuitikz}
+
+\usetikzlibrary{
+  decorations.markings,
+  shapes.geometric,
+  graphs,
+  graphs.standard,
+  backgrounds,
+  positioning
+}
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{edgelayer}
+\pgfdeclarelayer{nodelayer}
+\pgfsetlayers{background,edgelayer,nodelayer,main}
+
+%HSE Colors
+%main blue
+\definecolor{b1}{cmyk}{1,0.8,0,0.4}
+\definecolor{b2}{cmyk}{0.95,0.75,0.0,0}
+
+%gray
+\definecolor{gr1}{cmyk}{0,0,0,0.5}
+\definecolor{gr2}{cmyk}{0,0,0,0.25}
+\definecolor{gr3}{cmyk}{0,0,0,0.1}
+
+%light blue
+\definecolor{lb1}{cmyk}{0.75,0.2,0,0}
+\definecolor{lb2}{cmyk}{0.55,0.3,0,0}
+\definecolor{lb3}{cmyk}{0.20,0.1,0,0}
+
+%green
+\definecolor{g1}{cmyk}{0.8,0.1,0.75,0}
+\definecolor{g2}{cmyk}{0.3,0.15,0.40,0.03}
+\definecolor{g3}{cmyk}{0.2,0,0.35,0}
+
+%orange/brown
+\definecolor{o1}{cmyk}{0,0.7,1,0}
+\definecolor{o2}{cmyk}{0.1,0.5,0.8,0}
+\definecolor{o3}{cmyk}{0,0.15,0.5,0}
+
+%purple
+\definecolor{p1}{cmyk}{0.65,0.75,0,0}
+\definecolor{p2}{cmyk}{0.4,0.6,0.2,0.15}
+\definecolor{p3}{cmyk}{0.15,0.22,0,0}
+
+%red/pink
+\definecolor{r1}{cmyk}{0.2,1,0.6,0.05}
+\definecolor{r2}{cmyk}{0.2,0.75,0.6,0}
+\definecolor{r3}{cmyk}{0,0.3,0.3,0}
+
+%yellow
+\definecolor{y1}{cmyk}{0,0.3,0.92,0}
+\definecolor{y2}{cmyk}{0,0.15,0.8,0}
+\definecolor{y3}{cmyk}{0.05,0,0.6,0}
+
+
+% --- YOUR STYLES FILE ---
+\input{lab_logo.tikzstyles}
+
+\begin{document}
+
+\input{lab_logo.tikz}
+
+\end{document}
+
